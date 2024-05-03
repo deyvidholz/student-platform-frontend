@@ -1,17 +1,7 @@
 <template>
   <v-container class="fullscreen centralize">
     <v-card width="490px" color="grey lighten-4">
-      <v-card-title class="justify-center pb-0">
-        <v-avatar size="90px" tile>
-          <img :src="require('@/assets/imgs/logo.svg')" alt="logo" />
-        </v-avatar>
-      </v-card-title>
-
-      <v-card-text class="text-center">
-        Painel de Gerenciamento de Estudantes
-      </v-card-text>
-
-      <v-divider />
+      <card-header />
 
       <v-container>
         <v-row dense>
@@ -55,12 +45,26 @@
       <v-divider />
 
       <v-card-actions class="justify-space-between">
-        <v-btn color="teal" tile dark text>
+        <v-btn
+          :dark="isStateLoading ? false : true"
+          :disabled="isStateLoading"
+          @click="redirect('SignUp')"
+          color="teal"
+          tile
+          text
+        >
           <v-icon class="mr-1">mdi-account-plus</v-icon>
           Cadastrar
         </v-btn>
 
-        <v-btn color="blue" tile dark>
+        <v-btn
+          color="blue"
+          :dark="isStateLoading ? false : true"
+          :loading="isStateLoading"
+          :disabled="isStateLoading"
+          @click="authenticate"
+          tile
+        >
           <v-icon class="mr-1">mdi-login</v-icon>
           Login
         </v-btn>
@@ -70,7 +74,14 @@
 </template>
 
 <script>
+import UserService from '@/services/UserService';
+import CardHeader from './components/header';
+
 export default {
+  name: 'Home',
+
+  components: { CardHeader },
+
   data: () => ({
     showTip: true,
 
@@ -92,6 +103,10 @@ export default {
       },
     },
   }),
+
+  created() {
+    this.payload.username = this.$route.query.username || this.payload.username;
+  },
 
   methods: {
     togglePasswordDisplay() {
@@ -115,6 +130,27 @@ export default {
 
       this.fields.password.icon = icon;
       this.fields.password.type = type;
+    },
+
+    async authenticate() {
+      const { username, password } = this.payload;
+
+      if (!username?.length || !password?.length)
+        return this.showWarningSnackbar(
+          'Por favor, preencha os campos <b>Nome de Usuário</b> e <b>Senha</b>'
+        );
+
+      try {
+        const {
+          data: { accessToken },
+        } = await UserService.auth(this.payload);
+
+        localStorage.setItem('authToken', accessToken);
+        this.redirect('Students');
+      } catch (error) {
+        this.logError(error);
+        this.showErrorSnackbar('Nome de Usuário ou Senha inválido(s)');
+      }
     },
   },
 };
