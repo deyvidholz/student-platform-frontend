@@ -5,7 +5,7 @@ export default {
     },
 
     isAuthenticated() {
-      return localStorage.getItem('authToken')?.length;
+      return this.$store.state.isAuthenticated;
     }
   },
 

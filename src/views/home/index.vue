@@ -105,6 +105,8 @@ export default {
   }),
 
   created() {
+    localStorage.removeItem('authToken');
+    this.$store.state.isAuthenticated = false;
     this.payload.username = this.$route.query.username || this.payload.username;
   },
 
@@ -146,6 +148,7 @@ export default {
         } = await UserService.auth(this.payload);
 
         localStorage.setItem('authToken', accessToken);
+        this.$store.state.isAuthenticated = true;
         this.redirect('Students');
       } catch (error) {
         this.logError(error);

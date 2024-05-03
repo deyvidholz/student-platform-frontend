@@ -23,8 +23,10 @@ export default {
 
   components: { Toolbar, Snackbar },
 
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
+
+  created() {
+    this.$store.state.isAuthenticated = localStorage.getItem('authToken');
+  },
 };
 </script>
