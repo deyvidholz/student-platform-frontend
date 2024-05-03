@@ -1,0 +1,35 @@
+[role='dialog'] {
+  z-index: 9999 !important;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.min-w-200px {
+  min-width: 200px !important;
+}
+
+.mouse-pointer {
+  cursor: pointer;
+}
+
+.no-selection {
+  user-select: none;
+}
+
+.fullscreen {
+  height: calc(100vh - 69px);
+  width: 100%;
+}
+
+.centralize {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.fs-small {
+  font-size: 0.9em;
+}
